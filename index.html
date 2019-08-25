@@ -27,6 +27,10 @@
     //get and set Person by get
     url = new URL(window.location.href);
     person = url.searchParams.get('person');
+    password = url.searchParams.get('password');
+    if(password !== "ksdklrvnnr323ef04k3m") {
+        window.location.href ='https://sebastianwindau.github.io/sebastianwindau';
+    }
 
     if(person === "Sebastian" || person === "Dana") {
         element = document.getElementById('person-select');
