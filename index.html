@@ -4,30 +4,91 @@
     <meta charset="UTF-8">
     <title>splitCosts</title>
 </head>
+<style>
+    body {
+        margin: 0;
+        background: lightgray;
+
+    }
+    #spreadSheet {
+        width: 100vw;
+        height: 100vh;
+        max-width: 450px;
+        margin: 0 auto;
+        background: palegreen;
+        display: grid;
+        grid-auto-rows: 100px 50px 50px 50px 1fr;
+    }
+    #spreadSheet .formvalues {
+        display: grid;
+        grid-template-columns: 100px 1fr;
+        padding: 15px;
+        height: 30px;
+
+    }
+
+    #messages {
+        display: grid;
+        justify-content: center;
+        border: 1px solid darkgrey;
+    }
+    #messages.warning {
+        background: lightyellow;
+    }
+    #messages.info {
+         background: darkseagreen;
+     }
+    #messages.error {
+        background: indianred;
+    }
+
+    /*label {*/
+        /*display: inline-block;*/
+        /*width: 25%;*/
+    /*}*/
+    /*select, input {*/
+        /*width: 75%;*/
+    /*}*/
+
+</style>
 <body>
-<div id="person">
-    <label for="person">Person: </label>
-    <select id="person-select" name="person">
-        <option value="" selected disabled>Wählen</option>
-        <option value="Sebastian">Sebastian</option>
-        <option value="Dana">Dana</option>
-    </select>
-</div>
-<div id="description">
-    <label for="description">Beschreibung: </label>
-    <input type="text" name="description">
-</div>
-<div id="value">
-    <label for="value">Betrag: </label>
-    <input type="number" name="value">
+<div id="spreadSheet">
+    <div id="messages" class="warning">
+        Bitte melde dich an:
+        <button onclick="authenticate().then(loadClient)">Authorisieren</button>
+    </div>
+    <div id="person" class="formvalues">
+        <label for="person">Person: </label>
+        <select id="person-select" name="person">
+            <option value="" selected disabled>Wählen</option>
+            <option value="Sebastian">Sebastian</option>
+            <option value="Dana">Dana</option>
+        </select>
+    </div>
+    <div id="description" class="formvalues">
+        <label for="description">Beschreibung: </label>
+        <input type="text" name="description">
+    </div>
+    <div id="value" class="formvalues">
+        <label for="value">Betrag: </label>
+        <input type="number" name="value">
+    </div>
+    <div id="submit">
+        <button id="execute" onclick="execute()" disabled>Speichern</button>
+    </div>
+    <div></div>
 </div>
 
 <script src="https://apis.google.com/js/api.js"></script>
 <script>
+    const INFO = 1;
+    const ERROR = 2;
+    const WARN = 3;
     //get and set Person by get
     url = new URL(window.location.href);
     person = url.searchParams.get('person');
     password = url.searchParams.get('password');
+    isReadyForSubmit = false;
     if(password !== "ksdklrvnnr323ef04k3m") {
         window.location.href ='https://sebastianwindau.github.io/sebastianwindau';
     }
@@ -35,6 +96,26 @@
     if(person === "Sebastian" || person === "Dana") {
         element = document.getElementById('person-select');
         element.value = person;
+    }
+
+
+    function showMessage(type, message) {
+        let messageClass = "";
+        switch (type) {
+            case 1:
+                messageClass = "info";
+                break;
+            case 2:
+                messageClass = "error";
+            case 3:
+                messageClass = "warning";
+        }
+        let id = document.getElementById('messages');
+        id.classList.remove('info');
+        id.classList.remove('error');
+        id.classList.add(messageClass);
+        id.innerHTML = message;
+
     }
 
 
@@ -54,7 +135,12 @@
     function loadClient() {
         gapi.client.setApiKey("AIzaSyC_ZUt1AE7geGAmkGS_VblITLxKXBFLyEQ");
         return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/sheets/v4/rest")
-            .then(function() { console.log("GAPI client loaded for API"); },
+            .then(function() {
+                    console.log("GAPI client loaded for API");
+                    isReadyForSubmit = true;
+                    document.getElementById('execute').disabled=false;
+                    showMessage(INFO, 'Du bist angemeldet. Trage deine Daten ein und klicke "Speichern"');
+                },
                 function(err) { console.error("Error loading GAPI client for API", err); });
     }
     // Make sure the client is loaded and sign-in is complete before calling this method.
@@ -107,8 +193,6 @@
         gapi.auth2.init({client_id: "358215174432-1rhn3vqub53m5ojobfd0gcp4gcpuh8f5.apps.googleusercontent.com"});
     });
 </script>
-<button onclick="authenticate().then(loadClient)">authorize and load</button>
-<button onclick="execute()">execute</button>
 
 </body>
 </html>
