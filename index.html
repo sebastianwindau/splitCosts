@@ -69,7 +69,7 @@
 
             return gapi.client.sheets.spreadsheets.values.append({
                 "spreadsheetId": "17hunIMwNBzDReC2_U9gXg_QDWvJS7SjwN6_8UXXR_vI",
-                "range": "Dana!B1",
+                "range": person + "!B1",
                 "includeValuesInResponse": true,
                 "insertDataOption": "INSERT_ROWS",
                 "responseDateTimeRenderOption": "FORMATTED_STRING",
@@ -78,15 +78,19 @@
                 "resource": {
                     "values": [
                         [
-                            "TEST",
-                            4
+                            description,
+                            value
                         ]
                     ]
                 }
             })
                 .then(function (response) {
-                        // Handle the results here (response.result has the parsed body).
-                        console.log("Response", response);
+                        // Handle the results here (response.result has the parsed body
+                        if(response.status == 200) {
+                            console.log("supi");
+                        } else {
+                            console.log("Response", response);
+                        }
                     },
                     function (err) {
                         console.error("Execute error", err);
