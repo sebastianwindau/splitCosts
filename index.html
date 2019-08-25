@@ -5,8 +5,36 @@
     <title>Titsle</title>
 </head>
 <body>
+<div id="person">
+    <label for="person">Person: </label>
+    <select id="person-select" name="person">
+        <option value="" selected disabled>Wählen</option>
+        <option value="Sebastian">Sebastian</option>
+        <option value="Dana">Dana</option>
+    </select>
+</div>
+<div id="description">
+    <label for="description">Beschreibung: </label>
+    <input type="text" name="description">
+</div>
+<div id="value">
+    <label for="value">Betrag: </label>
+    <input type="number" name="value">
+</div>
+
 <script src="https://apis.google.com/js/api.js"></script>
 <script>
+    //get and set Person by get
+    url = new URL(window.location.href);
+    person = url.searchParams.get('person');
+
+    if(person === "Sebastian" || person === "Dana") {
+        element = document.getElementById('person-select');
+        element.value = person;
+    }
+
+
+
     /**
      * Sample JavaScript code for sheets.spreadsheets.values.append
      * See instructions for running APIs Explorer code samples locally:
@@ -27,28 +55,45 @@
     }
     // Make sure the client is loaded and sign-in is complete before calling this method.
     function execute() {
-        return gapi.client.sheets.spreadsheets.values.append({
-            "spreadsheetId": "17hunIMwNBzDReC2_U9gXg_QDWvJS7SjwN6_8UXXR_vI",
-            "range": "Dana!B1",
-            "includeValuesInResponse": true,
-            "insertDataOption": "INSERT_ROWS",
-            "responseDateTimeRenderOption": "FORMATTED_STRING",
-            "responseValueRenderOption": "FORMATTED_VALUE",
-            "valueInputOption": "RAW",
-            "resource": {
-                "values": [
-                    [
-                        "TEST",
-                        4
+        let person = document.getElementById('person-select').value;
+        let description = document.getElementsByName("description")[0].value;
+        let value = document.getElementsByName("value")[0].value;
+        console.log(person);
+        console.log(description.length);
+        console.log(value);
+        if(
+            (person === "Sebastian" || person === "Dana")
+            && description.length > 0
+            && value > 0
+        ) {
+
+            return gapi.client.sheets.spreadsheets.values.append({
+                "spreadsheetId": "17hunIMwNBzDReC2_U9gXg_QDWvJS7SjwN6_8UXXR_vI",
+                "range": "Dana!B1",
+                "includeValuesInResponse": true,
+                "insertDataOption": "INSERT_ROWS",
+                "responseDateTimeRenderOption": "FORMATTED_STRING",
+                "responseValueRenderOption": "FORMATTED_VALUE",
+                "valueInputOption": "RAW",
+                "resource": {
+                    "values": [
+                        [
+                            "TEST",
+                            4
+                        ]
                     ]
-                ]
-            }
-        })
-            .then(function(response) {
-                    // Handle the results here (response.result has the parsed body).
-                    console.log("Response", response);
-                },
-                function(err) { console.error("Execute error", err); });
+                }
+            })
+                .then(function (response) {
+                        // Handle the results here (response.result has the parsed body).
+                        console.log("Response", response);
+                    },
+                    function (err) {
+                        console.error("Execute error", err);
+                    });
+        } else {
+            alert("Daten sind nicht korrekt");
+        }
     }
     gapi.load("client:auth2", function() {
         gapi.auth2.init({client_id: "358215174432-1rhn3vqub53m5ojobfd0gcp4gcpuh8f5.apps.googleusercontent.com"});
