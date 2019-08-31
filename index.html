@@ -106,7 +106,7 @@
     <div></div>
     <div id="messages" class="warning">
         <div>Bitte melde dich an:</div>
-        <input type="submit" value="Authorisieren" id="authorize_button">
+        <input type="submit" value="Authorisieren" onclick="handleAuthClick()" id="authorize_button">
     </div>
     <div></div>
 </div>
@@ -281,7 +281,7 @@
             updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
             authorizeButton.onclick = handleAuthClick;
         }, function(error) {
-            appendPre(JSON.stringify(error, null, 2));
+            showMessage(ERROR, JSON.stringify(error, null, 2));
         });
     }
 
@@ -290,6 +290,8 @@
      *  appropriately. After a sign-in, the API is called.
      */
     function updateSigninStatus(isSignedIn) {
+        console.log("update");
+        console.log(isSignedIn);
         if (isSignedIn) {
             isReadyForSubmit = true;
             document.getElementById('execute').disabled=false;
