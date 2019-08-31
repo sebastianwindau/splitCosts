@@ -1,134 +1,249 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Google Sheets API Quickstart</title>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8">
+    <title>splitCosts</title>
 </head>
+<style>
+    body {
+        margin: 0;
+        padding:0;
+        font-family: "DejaVu Sans";
+    }
+    #spreadSheet {
+        font-size:30px;
+        width: 100vw;
+        height: 100vh;
+        margin: 0 auto;
+        padding: 0;
+        display: grid;
+        grid-auto-rows: 150px 200px 200px 200px 100px 1fr auto 200px;
+    }
+    #spreadSheet .formvalues {
+        display: grid;
+        font-size: 40px;
+
+    }
+    input {
+        font-size: 30px;
+    }
+
+    #messages {
+        display: inline-block;
+        text-align: center;
+        margin: 15px;
+
+    }
+    #messages.warning {
+        background: lightyellow;
+    }
+    #messages.info {
+         background: darkseagreen;
+        color: white;
+     }
+    #messages.error {
+        background: indianred;
+        color: white
+    }
+    #messages div {
+        background: inherit;
+    }
+
+    input[type=text], select, input[type=number] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-size: 30px;
+    }
+
+    input[type=submit] {
+        width: 100%;
+        background-color: #4CAF50;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    input[type=submit]:disabled {
+        background-color: lightgray;
+    }
+
+    div {
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 20px;
+    }
+</style>
 <body>
-<p>Google Sheets API Quickstart</p>
+<div id="spreadSheet">
+    <div><h2>splitCosts</h2></div>
+    <div id="person" class="formvalues">
+        <label for="person">Person: </label>
+        <select id="person-select" name="person">
+            <option value="" selected disabled>Wählen</option>
+            <option value="Sebastian">Sebastian</option>
+            <option value="Dana">Dana</option>
+        </select>
+    </div>
+    <div id="description" class="formvalues">
+        <label for="description">Beschreibung: </label>
+        <input type="text" name="description">
+    </div>
+    <div id="value" class="formvalues">
+        <label for="value">Betrag: </label>
+        <input type="number" name="value">
+    </div>
+    <div id="submit">
+        <input type="submit" value="Speichern" id="execute" onclick="execute()" disabled="disabled">
+    </div>
+    <div></div>
+    <div id="messages" class="warning">
+        <div>Bitte melde dich an:</div>
+        <input type="submit" onclick="authenticate().then(loadClient)" value="Authorisieren" id="auth">
+    </div>
+    <div></div>
+</div>
 
-<!--Add buttons to initiate auth sequence and sign out-->
-<button id="authorize_button" style="display: none;">Authorize</button>
-<button id="signout_button" style="display: none;">Sign Out</button>
-
-<pre id="content" style="white-space: pre-wrap;"></pre>
-
-<script type="text/javascript">
-    // Client ID and API key from the Developer Console
-    var CLIENT_ID = '358215174432-1rhn3vqub53m5ojobfd0gcp4gcpuh8f5.apps.googleusercontent.com';
-    var API_KEY = 'AIzaSyC_ZUt1AE7geGAmkGS_VblITLxKXBFLyEQ';
-
-    // Array of API discovery doc URLs for APIs used by the quickstart
-    var DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
-
-    // Authorization scopes required by the API; multiple scopes can be
-    // included, separated by spaces.
-    var SCOPES = "https://www.googleapis.com/auth/spreadsheets.readonly";
-
-    var authorizeButton = document.getElementById('authorize_button');
-    var signoutButton = document.getElementById('signout_button');
-
-    /**
-     *  On load, called to load the auth2 library and API client library.
-     */
-    function handleClientLoad() {
-        gapi.load('client:auth2', initClient);
+<script src="https://apis.google.com/js/api.js"></script>
+<script>
+    const INFO = 1;
+    const ERROR = 2;
+    const WARN = 3;
+    //get and set Person by get
+    url = new URL(window.location.href);
+    person = url.searchParams.get('person');
+    password = url.searchParams.get('password');
+    isReadyForSubmit = false;
+    if(password !== "ksdklrvnnr323ef04k3m") {
+        window.location.href ='https://sebastianwindau.github.io/sebastianwindau';
     }
 
-    /**
-     *  Initializes the API client library and sets up sign-in state
-     *  listeners.
-     */
-    function initClient() {
-        gapi.client.init({
-            apiKey: API_KEY,
-            clientId: CLIENT_ID,
-            discoveryDocs: DISCOVERY_DOCS,
-            scope: SCOPES
-        }).then(function () {
-            // Listen for sign-in state changes.
-            gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-
-            // Handle the initial sign-in state.
-            updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-            authorizeButton.onclick = handleAuthClick;
-            signoutButton.onclick = handleSignoutClick;
-        }, function(error) {
-            appendPre(JSON.stringify(error, null, 2));
-        });
+    if(person === "Sebastian" || person === "Dana") {
+        element = document.getElementById('person-select');
+        element.value = person;
     }
 
+
+    function showMessage(type, message) {
+        let messageClass = "";
+        switch (type) {
+            case 1:
+                messageClass = "info";
+                break;
+            case 2:
+                messageClass = "error";
+                break;
+            case 3:
+                messageClass = "warning";
+        }
+        let id = document.getElementById('messages');
+        id.classList.remove('info');
+        id.classList.remove('error');
+        id.classList.remove('warning');
+        id.classList.add(messageClass);
+        id.innerHTML = message;
+
+    }
+
+
+
     /**
-     *  Called when the signed in status changes, to update the UI
-     *  appropriately. After a sign-in, the API is called.
+     * Sample JavaScript code for sheets.spreadsheets.values.append
+     * See instructions for running APIs Explorer code samples locally:
+     * https://developers.google.com/explorer-help/guides/code_samples#javascript
      */
-    function updateSigninStatus(isSignedIn) {
-        if (isSignedIn) {
-            authorizeButton.style.display = 'none';
-            signoutButton.style.display = 'block';
-            listMajors();
+
+    function authenticate() {
+        return gapi.auth2.getAuthInstance()
+            .signIn({scope: "https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets"})
+            .then(function() { console.log("Sign-in successful"); },
+                function(err) { console.error("Error signing in", err); });
+    }
+    function loadClient() {
+        gapi.client.setApiKey("AIzaSyC_ZUt1AE7geGAmkGS_VblITLxKXBFLyEQ");
+        return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/sheets/v4/rest")
+            .then(function() {
+                    console.log("GAPI client loaded for API");
+                    isReadyForSubmit = true;
+                    document.getElementById('execute').disabled=false;
+                    showMessage(INFO, '<div>Du bist angemeldet. Trage deine Daten ein und klicke "Speichern"</div>');
+                },
+                function(err) { console.error("Error loading GAPI client for API", err); });
+    }
+    // Make sure the client is loaded and sign-in is complete before calling this method.
+    function execute() {
+        let person = document.getElementById('person-select').value;
+        let description = document.getElementsByName("description")[0].value;
+        let value = document.getElementsByName("value")[0].value;
+        document.getElementById('execute').disabled=true;
+        console.log(person);
+        console.log(description.length);
+        console.log(value);
+        if(
+            (person === "Sebastian" || person === "Dana")
+            && description.length > 0
+            && value > 0
+        ) {
+
+            return gapi.client.sheets.spreadsheets.values.append({
+                "spreadsheetId": "17hunIMwNBzDReC2_U9gXg_QDWvJS7SjwN6_8UXXR_vI",
+                "range": person + "!B1",
+                "includeValuesInResponse": true,
+                "insertDataOption": "INSERT_ROWS",
+                "responseDateTimeRenderOption": "FORMATTED_STRING",
+                "responseValueRenderOption": "FORMATTED_VALUE",
+                "valueInputOption": "RAW",
+                "resource": {
+                    "values": [
+                        [
+                            description,
+                            parseFloat(value)
+                        ]
+                    ]
+                }
+            })
+                .then(function (response) {
+                        // Handle the results here (response.result has the parsed body
+                        if(response.status == 200) {
+                            console.log("supi");
+                            console.log(response);
+                            document.getElementsByName("description")[0].value = '';
+                            document.getElementsByName("value")[0].value = '';
+                            document.getElementById('execute').disabled=false;
+                            showMessage(INFO, '<div>Speichern erfolgreich</div>');
+                        } else {
+                            console.log("Response", response);
+                            document.getElementById('execute').disabled=false;
+                            showMessage(ERROR, '<div>Speichern nicht erfolgreich! Versuche es nochmal.</div>');
+                        }
+                    },
+                    function (err) {
+                        console.error("Execute error", err);
+                        document.getElementById('execute').disabled=false;
+                        showMessage(ERROR, '<div>Speichern nicht erfolgreich! Versuche es nochmal.</div>');
+                    });
         } else {
-            authorizeButton.style.display = 'block';
-            signoutButton.style.display = 'none';
+            alert("Daten sind nicht korrekt");
+            document.getElementById('execute').disabled=false;
+            showMessage(ERROR, '<div>Speichern nicht erfolgreich! Versuche es nochmal.</div>');
         }
     }
-
-    /**
-     *  Sign in the user upon button click.
-     */
-    function handleAuthClick(event) {
-        gapi.auth2.getAuthInstance().signIn();
-    }
-
-    /**
-     *  Sign out the user upon button click.
-     */
-    function handleSignoutClick(event) {
-        gapi.auth2.getAuthInstance().signOut();
-    }
-
-    /**
-     * Append a pre element to the body containing the given message
-     * as its text node. Used to display the results of the API call.
-     *
-     * @param {string} message Text to be placed in pre element.
-     */
-    function appendPre(message) {
-        var pre = document.getElementById('content');
-        var textContent = document.createTextNode(message + '\n');
-        pre.appendChild(textContent);
-    }
-
-    /**
-     * Print the names and majors of students in a sample spreadsheet:
-     * https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
-     */
-    function listMajors() {
-        gapi.client.sheets.spreadsheets.values.get({
-            spreadsheetId: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms',
-            range: 'Class Data!A2:E',
-        }).then(function(response) {
-            var range = response.result;
-            if (range.values.length > 0) {
-                appendPre('Name, Major:');
-                for (i = 0; i < range.values.length; i++) {
-                    var row = range.values[i];
-                    // Print columns A and E, which correspond to indices 0 and 4.
-                    appendPre(row[0] + ', ' + row[4]);
-                }
-            } else {
-                appendPre('No data found.');
-            }
-        }, function(response) {
-            appendPre('Error: ' + response.result.error.message);
-        });
-    }
+    gapi.load("client:auth2", function() {
+        gapi.auth2.init({client_id: "358215174432-1rhn3vqub53m5ojobfd0gcp4gcpuh8f5.apps.googleusercontent.com"});
+    });
 
 </script>
 
 <script async defer src="https://apis.google.com/js/api.js"
-        onload="this.onload=function(){};handleClientLoad()"
+        onload="this.onload=function(){};authenticate().then(loadClient)"
         onreadystatechange="if (this.readyState === 'complete') this.onload()">
-</script>
+
 </body>
 </html>
