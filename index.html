@@ -106,14 +106,11 @@
     <div></div>
     <div id="messages" class="warning">
         <div>Bitte melde dich an:</div>
-        <!--<input type="submit" value="Authorisieren" onclick="handleAuthClick()" id="authorize_button">-->
-        <button id="authorize_button" style="display: none;">Authorize</button>
-        <button id="signout_button" style="display: none;">Sign Out</button>
+        <input type="submit" value="Authorisieren" onclick="handleAuthClick()" id="authorize_button">
     </div>
     <div></div>
 </div>
 
-<script src="https://apis.google.com/js/api.js"></script>
 <script>
     const INFO = 1;
     const ERROR = 2;
@@ -257,8 +254,6 @@
     var SCOPES = "https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets";
 
     var authorizeButton = document.getElementById('authorize_button');
-    var signoutButton = document.getElementById('signout_button');
-
 
     /**
      *  On load, called to load the auth2 library and API client library.
@@ -284,7 +279,6 @@
             // Handle the initial sign-in state.
             updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
             authorizeButton.onclick = handleAuthClick;
-            signoutButton.onclick = handleSignoutClick;
         }, function(error) {
             showMessage(ERROR, JSON.stringify(error, null, 2));
         });
@@ -295,13 +289,12 @@
      *  appropriately. After a sign-in, the API is called.
      */
     function updateSigninStatus(isSignedIn) {
+        console.log("update");
+        console.log(isSignedIn)
         if (isSignedIn) {
-            authorizeButton.style.display = 'none';
-            signoutButton.style.display = 'block';
-            listMajors();
-        } else {
-            authorizeButton.style.display = 'block';
-            signoutButton.style.display = 'none';
+            isReadyForSubmit = true;
+            document.getElementById('execute').disabled=false;
+            showMessage(INFO, '<div>Du bist angemeldet. Trage deine Daten ein und klicke "Speichern"</div>');
         }
     }
 
@@ -310,10 +303,6 @@
      */
     function handleAuthClick(event) {
         gapi.auth2.getAuthInstance().signIn();
-    }
-
-    function handleSignoutClick(event) {
-        gapi.auth2.getAuthInstance().signOut();
     }
 
 </script>
