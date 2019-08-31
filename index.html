@@ -48,6 +48,11 @@
     #messages div {
         background: inherit;
     }
+    #lastCosts {
+        margin:30px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
 
     input[type=text], select, input[type=number] {
         width: 100%;
@@ -103,7 +108,14 @@
     <div id="submit">
         <input type="submit" value="Speichern" id="execute" onclick="execute()" disabled="disabled">
     </div>
-    <div></div>
+    <div id="lastCosts">
+        <div id="dana-column">
+            <b>Dana:</b>
+        </div>
+        <div id="sebastian-column">
+            <b>Sebastian:</b>
+        </div>
+    </div>
     <div id="messages" class="warning">
         <div>Bitte melde dich an:</div>
         <input type="submit" value="Authorisieren" onclick="handleAuthClick()" id="authorize_button">
@@ -210,22 +222,16 @@
     function listCosts() {
         gapi.client.sheets.spreadsheets.values.get({
             spreadsheetId: '17hunIMwNBzDReC2_U9gXg_QDWvJS7SjwN6_8UXXR_vI',
-            range: 'Sebastian!B1',
+            range: 'Zusammenfassung!B12:B13',
         }).then(function(response) {
             var range = response.result;
-            if (range.values.length > 0) {
-                console.log(range)
-                // appendPre('Name, Major:');
-                // for (i = 0; i < range.values.length; i++) {
-                //     var row = range.values[i];
-                //     // Print columns A and E, which correspond to indices 0 and 4.
-                //     appendPre(row[0] + ', ' + row[4]);
-                // }
-            } else {
-                appendPre('No data found.');
+            if (range.values.length > 1) {
+                danaCosts = range.values[1];
+                sebiCosts = range.values[0];
+                document.getElementById('sebastian-column').innerHTML += sebiCosts + '<br/>';
+                document.getElementById('dana-column').innerHTML += danaCosts + '<br/>';
             }
         }, function(response) {
-            appendPre('Error: ' + response.result.error.message);
         });
     }
 
