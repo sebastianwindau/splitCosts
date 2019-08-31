@@ -252,15 +252,13 @@
                 let danaCosts = range.values[1];
                 let sebiCosts = range.values[0];
 
-                if(sebiCosts !== lastTotalSebi) {
+                if(sebiCosts[0] !== lastTotalSebi[0]) {
                     document.getElementById('sebastian-column').innerHTML += '<div>' + sebiCosts + '</div>';
                     lastTotalSebi = sebiCosts;
                 }
-
-                if(danaCosts !== lastTotalDana) {
+                if(danaCosts[0] !== lastTotalDana[0]) {
                     document.getElementById('dana-column').innerHTML += '<div>' + danaCosts + '</div>';
                     lastTotalDana = danaCosts;
-                    console.log(lastTotalDana)
                 }
             }
         }, function(response) {
