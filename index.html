@@ -102,7 +102,7 @@
     </div>
     <div id="submit">
         <!--<button id="execute" onclick="execute()" disabled>Speichern</button>-->
-        <input type="submit" value="Speichern" id="execute" onclick="execute()"  disabled="disabled">
+        <input type="submit" value="Speichern" id="execute" onclick="execute()" disabled="disabled">
     </div>
     <div></div>
     <div id="messages" class="warning">
@@ -140,12 +140,14 @@
                 break;
             case 2:
                 messageClass = "error";
+                break;
             case 3:
                 messageClass = "warning";
         }
         let id = document.getElementById('messages');
         id.classList.remove('info');
         id.classList.remove('error');
+        id.classList.remove('warning');
         id.classList.add(messageClass);
         id.innerHTML = message;
 
@@ -181,6 +183,7 @@
         let person = document.getElementById('person-select').value;
         let description = document.getElementsByName("description")[0].value;
         let value = document.getElementsByName("value")[0].value;
+        document.getElementById('execute').disabled=true;
         console.log(person);
         console.log(description.length);
         console.log(value);
@@ -211,15 +214,26 @@
                         // Handle the results here (response.result has the parsed body
                         if(response.status == 200) {
                             console.log("supi");
+                            console.log(response);
+                            document.getElementsByName("description")[0].value = '';
+                            document.getElementsByName("value")[0].value = '';
+                            document.getElementById('execute').disabled=false;
+                            showMessage(INFO, '<div>Speichern erfolgreich</div>');
                         } else {
                             console.log("Response", response);
+                            document.getElementById('execute').disabled=false;
+                            showMessage(ERROR, '<div>Speichern nicht erfolgreich! Versuche es nochmal.</div>');
                         }
                     },
                     function (err) {
                         console.error("Execute error", err);
+                        document.getElementById('execute').disabled=false;
+                        showMessage(ERROR, '<div>Speichern nicht erfolgreich! Versuche es nochmal.</div>');
                     });
         } else {
             alert("Daten sind nicht korrekt");
+            document.getElementById('execute').disabled=false;
+            showMessage(ERROR, '<div>Speichern nicht erfolgreich! Versuche es nochmal.</div>');
         }
     }
     gapi.load("client:auth2", function() {
@@ -227,6 +241,10 @@
     });
 
 </script>
+
+<script async defer src="https://apis.google.com/js/api.js"
+        onload="this.onload=function(){};authenticate().then(loadClient)"
+        onreadystatechange="if (this.readyState === 'complete') this.onload()">
 
 </body>
 </html>
