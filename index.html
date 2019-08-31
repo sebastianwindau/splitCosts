@@ -230,8 +230,8 @@
             if (range.values.length > 1) {
                 danaCosts = range.values[1];
                 sebiCosts = range.values[0];
-                document.getElementById('sebastian-column').innerHTML += sebiCosts + '<br/>';
-                document.getElementById('dana-column').innerHTML += danaCosts + '<br/>';
+                document.getElementById('sebastian-column').innerHTML += '<div>' + sebiCosts + '</div>';
+                document.getElementById('dana-column').innerHTML += '<div>' + danaCosts + '</div>';
             }
         }, function(response) {
         });
