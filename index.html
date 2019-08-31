@@ -260,6 +260,7 @@
                 if(danaCosts !== lastTotalDana) {
                     document.getElementById('dana-column').innerHTML += '<div>' + danaCosts + '</div>';
                     lastTotalDana = danaCosts;
+                    console.log(lastTotalDana)
                 }
             }
         }, function(response) {
