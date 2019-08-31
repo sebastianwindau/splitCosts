@@ -7,56 +7,83 @@
 <style>
     body {
         margin: 0;
-        background: lightgray;
-
+        padding:0;
+        font-family: "DejaVu Sans";
     }
     #spreadSheet {
+        font-size:30px;
         width: 100vw;
         height: 100vh;
-        max-width: 450px;
         margin: 0 auto;
-        background: palegreen;
+        padding: 0;
         display: grid;
-        grid-auto-rows: 100px 50px 50px 50px 1fr;
+        grid-auto-rows: 150px 200px 200px 200px 100px 1fr auto;
     }
     #spreadSheet .formvalues {
         display: grid;
-        grid-template-columns: 100px 1fr;
-        padding: 15px;
-        height: 30px;
+        font-size: 40px;
 
+    }
+    input {
+        font-size: 30px;
     }
 
     #messages {
-        display: grid;
-        justify-content: center;
-        border: 1px solid darkgrey;
+        display: inline-block;
+        text-align: center;
+        margin: 15px;
+
     }
     #messages.warning {
         background: lightyellow;
     }
     #messages.info {
          background: darkseagreen;
+        color: white;
      }
     #messages.error {
         background: indianred;
+        color: white
+    }
+    #messages div {
+        background: inherit;
     }
 
-    /*label {*/
-        /*display: inline-block;*/
-        /*width: 25%;*/
-    /*}*/
-    /*select, input {*/
-        /*width: 75%;*/
-    /*}*/
+    input[type=text], select, input[type=number] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-size: 30px;
+    }
 
+    input[type=submit] {
+        width: 100%;
+        background-color: #4CAF50;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    input[type=submit]:disabled {
+        background-color: lightgray;
+    }
+
+    div {
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 20px;
+    }
 </style>
 <body>
 <div id="spreadSheet">
-    <div id="messages" class="warning">
-        Bitte melde dich an:
-        <button onclick="authenticate().then(loadClient)">Authorisieren</button>
-    </div>
+    <div><h2>splitCosts</h2></div>
     <div id="person" class="formvalues">
         <label for="person">Person: </label>
         <select id="person-select" name="person">
@@ -74,9 +101,14 @@
         <input type="number" name="value">
     </div>
     <div id="submit">
-        <button id="execute" onclick="execute()" disabled>Speichern</button>
+        <!--<button id="execute" onclick="execute()" disabled>Speichern</button>-->
+        <input type="submit" value="Speichern" id="execute" onclick="execute()"  disabled="disabled">
     </div>
     <div></div>
+    <div id="messages" class="warning">
+        <div>Bitte melde dich an:</div>
+        <input type="submit" onclick="authenticate().then(loadClient)" value="Authorisieren" id="auth">
+    </div>
 </div>
 
 <script src="https://apis.google.com/js/api.js"></script>
@@ -139,7 +171,7 @@
                     console.log("GAPI client loaded for API");
                     isReadyForSubmit = true;
                     document.getElementById('execute').disabled=false;
-                    showMessage(INFO, 'Du bist angemeldet. Trage deine Daten ein und klicke "Speichern"');
+                    showMessage(INFO, '<div>Du bist angemeldet. Trage deine Daten ein und klicke "Speichern"</div>');
                 },
                 function(err) { console.error("Error loading GAPI client for API", err); });
     }
@@ -192,6 +224,7 @@
     gapi.load("client:auth2", function() {
         gapi.auth2.init({client_id: "358215174432-1rhn3vqub53m5ojobfd0gcp4gcpuh8f5.apps.googleusercontent.com"});
     });
+
 </script>
 
 </body>
