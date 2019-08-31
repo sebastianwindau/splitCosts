@@ -152,6 +152,8 @@
     person = url.searchParams.get('person');
     password = url.searchParams.get('password');
     isReadyForSubmit = false;
+    lastTotalDana = 0;
+    lastTotalSebi = 0;
     if(password !== "ksdklrvnnr323ef04k3m") {
         window.location.href ='https://sebastianwindau.github.io/sebastianwindau';
     }
@@ -247,10 +249,18 @@
         }).then(function(response) {
             var range = response.result;
             if (range.values.length > 1) {
-                danaCosts = range.values[1];
-                sebiCosts = range.values[0];
-                document.getElementById('sebastian-column').innerHTML += '<div>' + sebiCosts + '</div>';
-                document.getElementById('dana-column').innerHTML += '<div>' + danaCosts + '</div>';
+                let danaCosts = range.values[1];
+                let sebiCosts = range.values[0];
+
+                if(sebiCosts !== lastTotalSebi) {
+                    document.getElementById('sebastian-column').innerHTML += '<div>' + sebiCosts + '</div>';
+                    lastTotalSebi = sebiCosts;
+                }
+
+                if(danaCosts !== lastTotalDana) {
+                    document.getElementById('dana-column').innerHTML += '<div>' + danaCosts + '</div>';
+                    lastTotalDana = danaCosts;
+                }
             }
         }, function(response) {
         });
