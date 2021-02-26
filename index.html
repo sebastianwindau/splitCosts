@@ -285,6 +285,7 @@
                             document.getElementById('execute').disabled=false;
                             showMessage(INFO, '<div>Speichern erfolgreich</div>');
                             listCosts();
+                            console.log('start');
                             listCostTypes();
                         } else {
                             console.log("Response", response);
@@ -341,7 +342,7 @@
                 let fun = range.values[4];
                 let clothes = range.values[5];
                 let other = range.values[6];
-
+                console.log(food)
                 var data = google.visualization.arrayToDataTable([
                     ['Type', 'Amount'],
                     ['Food', food],
@@ -352,7 +353,7 @@
                     ['Car', car],
                     ['Other', other]
                 ]);
-                console.log(food)
+
 
                 // Optional; add a title and set the width and height of the chart
                 var options = {
