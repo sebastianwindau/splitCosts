@@ -283,6 +283,7 @@
                             document.getElementById('execute').disabled=false;
                             showMessage(INFO, '<div>Speichern erfolgreich</div>');
                             listCosts();
+                            listCostTypes();
                         } else {
                             console.log("Response", response);
                             document.getElementById('execute').disabled=false;
@@ -349,7 +350,7 @@
                     ['Car', car],
                     ['Other', other]
                 ]);
-                console.log(food);
+
                 // Optional; add a title and set the width and height of the chart
                 var options = {
                     'legend':'none',
@@ -360,7 +361,6 @@
                     'tooltip': { trigger: 'none' },
                     'colors':['#2ECC40', '#B10DC9', '#001f3f', '#3D9970', '#FFDC00', '#00DDDD', 'grey']
                 };
-                google.charts.load('current', {'packages':['corechart']});
 
                 // Display the chart inside the <div> element with id="piechart"
                 var chart = new google.visualization.PieChart(document.getElementById('piechart'));
