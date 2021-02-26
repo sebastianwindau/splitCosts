@@ -423,8 +423,6 @@
      *  appropriately. After a sign-in, the API is called.
      */
     function updateSigninStatus(isSignedIn) {
-        console.log("update");
-        console.log(isSignedIn)
         if (isSignedIn) {
             isReadyForSubmit = true;
             document.getElementById('execute').disabled=false;
