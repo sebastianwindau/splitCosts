@@ -333,13 +333,13 @@
         }).then(function(response) {
             var range = response.result;
             if (range.values.length > 1) {
-                let food = Number(range.values[0]);
-                let living = Number(range.values[1]);
-                let baby = Number(range.values[2]);
-                let car = Number(range.values[3]);
-                let fun = Number(range.values[4]);
-                let clothes = Number(range.values[5]);
-                let other = Number(range.values[6]);
+                let food = parseFloat(range.values[0].replace('.','').replace(',','.'));
+                let living = parseFloat(range.values[1].replace('.','').replace(',','.'));
+                let baby = parseFloat(range.values[2].replace('.','').replace(',','.'));
+                let car = parseFloat(range.values[3].replace('.','').replace(',','.'));
+                let fun = parseFloat(range.values[4].replace('.','').replace(',','.'));
+                let clothes = parseFloat(range.values[5].replace('.','').replace(',','.'));
+                let other = parseFloat(range.values[6].replace('.','').replace(',','.'));
                 console.log(food)
                 var data = google.visualization.arrayToDataTable([
                     ['Type', 'Amount'],
