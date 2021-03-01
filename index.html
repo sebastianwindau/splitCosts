@@ -333,23 +333,23 @@
         }).then(function(response) {
             var range = response.result;
             if (range.values.length > 1) {
-                let food = parseFloat(range.values[0].replace('.','').replace(',','.'));
-                let living = parseFloat(range.values[1].replace('.','').replace(',','.'));
-                let baby = parseFloat(range.values[2].replace('.','').replace(',','.'));
-                let car = parseFloat(range.values[3].replace('.','').replace(',','.'));
-                let fun = parseFloat(range.values[4].replace('.','').replace(',','.'));
-                let clothes = parseFloat(range.values[5].replace('.','').replace(',','.'));
-                let other = parseFloat(range.values[6].replace('.','').replace(',','.'));
+                let food = range.values[0];
+                let living = range.values[1];
+                let baby = range.values[2];
+                let car = range.values[3];
+                let fun = range.values[4];
+                let clothes = range.values[5];
+                let other = range.values[6];
                 console.log(food)
                 var data = google.visualization.arrayToDataTable([
                     ['Type', 'Amount'],
-                    ['Food', food],
-                    ['Baby', baby],
-                    ['Fun', fun],
-                    ['Clothes', clothes],
-                    ['Living', living],
-                    ['Car', car],
-                    ['Other', other]
+                    ['Food', parseFloat(food.replace('.','').replace(',','.'))],
+                    ['Baby', parseFloat(baby.replace('.','').replace(',','.'))],
+                    ['Fun', parseFloat(fun.replace('.','').replace(',','.'))],
+                    ['Clothes', parseFloat(clothes.replace('.','').replace(',','.'))],
+                    ['Living', parseFloat(living.replace('.','').replace(',','.'))],
+                    ['Car', parseFloat(car.replace('.','').replace(',','.'))],
+                    ['Other', parseFloat(other.replace('.','').replace(',','.'))]
                 ]);
 
 
