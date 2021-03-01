@@ -340,16 +340,16 @@
                 let fun = range.values[4];
                 let clothes = range.values[5];
                 let other = range.values[6];
-                console.log(food)
+                console.log(food[0])
                 var data = google.visualization.arrayToDataTable([
                     ['Type', 'Amount'],
-                    ['Food', parseFloat(food.replace('.','').replace(',','.'))],
-                    ['Baby', parseFloat(baby.replace('.','').replace(',','.'))],
-                    ['Fun', parseFloat(fun.replace('.','').replace(',','.'))],
-                    ['Clothes', parseFloat(clothes.replace('.','').replace(',','.'))],
-                    ['Living', parseFloat(living.replace('.','').replace(',','.'))],
-                    ['Car', parseFloat(car.replace('.','').replace(',','.'))],
-                    ['Other', parseFloat(other.replace('.','').replace(',','.'))]
+                    ['Food', parseFloat(food[0].replace('.','').replace(',','.'))],
+                    ['Baby', parseFloat(baby[0].replace('.','').replace(',','.'))],
+                    ['Fun', parseFloat(fun[0].replace('.','').replace(',','.'))],
+                    ['Clothes', parseFloat(clothes[0].replace('.','').replace(',','.'))],
+                    ['Living', parseFloat(living[0].replace('.','').replace(',','.'))],
+                    ['Car', parseFloat(car[0].replace('.','').replace(',','.'))],
+                    ['Other', parseFloat(other[0].replace('.','').replace(',','.'))]
                 ]);
 
 
