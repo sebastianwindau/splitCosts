@@ -343,13 +343,13 @@
                 console.log(food[0])
                 var data = google.visualization.arrayToDataTable([
                     ['Type', 'Amount'],
-                    ['Food', parseFloat(food[0].replace('.','').replace(',','.'))],
-                    ['Baby', parseFloat(baby[0].replace('.','').replace(',','.'))],
-                    ['Fun', parseFloat(fun[0].replace('.','').replace(',','.'))],
-                    ['Clothes', parseFloat(clothes[0].replace('.','').replace(',','.'))],
-                    ['Living', parseFloat(living[0].replace('.','').replace(',','.'))],
-                    ['Car', parseFloat(car[0].replace('.','').replace(',','.'))],
-                    ['Other', parseFloat(other[0].replace('.','').replace(',','.'))]
+                    ['Food', food[0]],
+                    ['Baby', baby[0]],
+                    ['Fun', fun[0]],
+                    ['Clothes', clothes[0]],
+                    ['Living', living[0]],
+                    ['Car', car[0]],
+                    ['Other', other[0]]
                 ]);
 
 
