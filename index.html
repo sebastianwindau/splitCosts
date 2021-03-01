@@ -333,13 +333,13 @@
         }).then(function(response) {
             var range = response.result;
             if (range.values.length > 1) {
-                let food = parseInt(range.values[0], 10);
-                let living = parseInt(range.values[1], 10);
-                let baby = parseInt(range.values[2], 10);
-                let car = parseInt(range.values[3], 10);
-                let fun = parseInt(range.values[4], 10);
-                let clothes = parseInt(range.values[5], 10);
-                let other = parseInt(range.values[6], 10);
+                let food = Number(range.values[0]);
+                let living = Number(range.values[1]);
+                let baby = Number(range.values[2]);
+                let car = Number(range.values[3]);
+                let fun = Number(range.values[4]);
+                let clothes = Number(range.values[5]);
+                let other = Number(range.values[6]);
                 console.log(food)
                 var data = google.visualization.arrayToDataTable([
                     ['Type', 'Amount'],
